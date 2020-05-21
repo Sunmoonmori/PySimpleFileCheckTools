@@ -10,16 +10,16 @@ DIR = ''
 
 def install():
     opener = urllib.request.build_opener()
-    opener.addheaders = [('Cookie', 'BDUSS=' + BDUSS + '; STOKEN=' + STOKEN + ';')]
+    opener.addheaders = [('Cookie', 'BDUSS=%s; STOKEN=%s;' % (BDUSS, STOKEN))]
     urllib.request.install_opener(opener)
 
 
 def get_file_list(rdir):
     file_list = []
-    list_url = 'https://pan.baidu.com/api/list?dir=' + urllib.parse.quote(rdir)
+    list_url = 'https://pan.baidu.com/api/list?dir=%s' % (urllib.parse.quote(rdir), )
     with urllib.request.urlopen(list_url) as list_req:
         list_page = list_req.read()
-        page_json = json.loads(str(list_page, encoding='unicode_escape'))
+    page_json = json.loads(str(list_page, encoding='unicode_escape'))
     for i in page_json['list']:
         if i['isdir'] == 0:
             file_list.append(i)
@@ -32,7 +32,7 @@ def get_file_list(rdir):
 
 def get_md5(file_o):
     file = urllib.parse.quote(file_o)
-    url = 'http://pcs.baidu.com/rest/2.0/pcs/file?app_id=' + APPID + '&method=download&path=' + file
+    url = 'http://pcs.baidu.com/rest/2.0/pcs/file?app_id=%s&method=download&path=%s' % (APPID, file)
     with urllib.request.urlopen(url) as req:
         return req.headers['Content-Length'], req.headers['Content-MD5']
 
